@@ -1,0 +1,54 @@
+#ex1: log data to terminal
+logQuerySuccess:
+	awk -F '|' '/QuerySuccess/ {print $5}' ./statistic.log
+
+logQueryFail:
+	awk -F '|' '/QueryFail/ {print $6}' ./statistic.log
+
+logUpdateSuccess:
+	awk -F '|' '/UpdateSuccess/ {print $7}' ./statistic.log
+
+logUpdateFail:
+	awk -F '|' '/UpdateFail/ {print $8}' ./statistic.log
+
+logAvgResTime:
+	awk '/Avg Res Time/ {split($0,a,"|"); split(a[11],b,"\t"); split(b[2],c," "); print c[4]}' ./statistic.log
+
+logtps:
+	awk -F '|' '/tps/ {print $14}' ./statistic.log
+
+#ex2: save data to log file output.txt
+  
+saveQuerySuccess:
+	awk -F '|' '/QuerySuccess/ {print $5}' ./statistic.log | tee output.txt
+
+saveQueryFail:
+	awk -F '|' '/QueryFail/ {print $6}' ./statistic.log | tee output.txt
+
+saveUpdateSuccess:
+	awk -F '|' '/UpdateSuccess/ {print $7}' ./statistic.log | tee output.txt
+
+saveUpdateFail:
+	awk -F '|' '/UpdateFail/ {print $8}' ./statistic.log | tee output.txt
+
+saveAvgResTime:
+	awk '/Avg Res Time/ {split($0,a,"|"); split(a[11],b,"\t"); print b[2]}' ./statistic.log | tee output.txt
+
+savetps:
+	awk -F '|' '/tps/ {print $14}' ./statistic.log | tee output.txt
+
+#ex3: time and tpsmax sorted decrease
+  
+timeDecrease:
+	awk -F "[| ]" '{print $1 " " $2 " " $61}' ./statistic.log | sort -k 2 -r | head -n 10
+
+tpsMaxDecrease:
+	awk -F "[| ]" '{print $1 " " $2 " " $61}' ./statistic.log | sort -k 3 -r | head -n 10
+  
+#ex4: time and tpsmax sorted increase
+  
+timeIncrease:
+	awk -F "[| ]" '{print $1 " " $2 " " $61}' ./statistic.log | sort -k 2 | head -n 10
+
+tpsMaxIncrease:
+	awk -F "[| ]" '{print $1 " " $2 " " $61}' ./statistic.log | sort -k 3 | head -n 10
